@@ -6,10 +6,23 @@ import path from 'node:path';
 
 const app = express();
 const port = process.env.PORT || 5000;
-const frontendOrigin = process.env.FRONTEND_ORIGIN || 'http://localhost:5173';
+const frontendOrigins = (process.env.FRONTEND_ORIGIN || 'http://localhost:5173')
+  .split(',')
+  .map((origin) => origin.trim())
+  .filter(Boolean);
 const adminToken = process.env.ADMIN_TOKEN || '';
 
-app.use(cors({ origin: frontendOrigin }));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || frontendOrigins.includes(origin)) {
+        callback(null, true);
+        return;
+      }
+      callback(new Error('Not allowed by CORS'));
+    }
+  })
+);
 app.use(express.json({ limit: '200kb' }));
 
 const required = [
