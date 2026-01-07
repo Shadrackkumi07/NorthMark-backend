@@ -1,0 +1,54 @@
+{
+  "reviews": [
+    {
+      "id": 1,
+      "name": "John Smith",
+      "company": "ABC Property Management",
+      "rating": 5,
+      "date": "2024-12-15",
+      "text": "Northmark has been maintaining our commercial properties for over two years. Their attention to detail and consistent quality is outstanding. Highly professional team.",
+      "service": "Commercial Property Maintenance",
+      "source": "seed"
+    },
+    {
+      "id": 2,
+      "name": "Sarah Johnson",
+      "company": "Medical Plaza Associates",
+      "rating": 5,
+      "date": "2024-11-28",
+      "text": "Their janitorial services for our medical facility are impeccable. They understand the importance of sanitization and follow all our protocols perfectly.",
+      "service": "Routine Janitorial Services",
+      "source": "seed"
+    },
+    {
+      "id": 3,
+      "name": "Mike Thompson",
+      "company": "Downtown Office Center",
+      "rating": 5,
+      "date": "2024-11-10",
+      "text": "We've used several cleaning companies over the years, and Northmark stands out. Their after-hours cleaning never disrupts our operations, and the quality is consistently excellent.",
+      "service": "After-Hours Commercial Cleaning",
+      "source": "seed"
+    },
+    {
+      "id": 4,
+      "name": "Jennifer Lee",
+      "company": "Riverside Business Park",
+      "rating": 5,
+      "date": "2024-10-22",
+      "text": "The aerial inspection service helped us identify roof issues we couldn't see from the ground. The detailed documentation was invaluable for our insurance claim. Professional and thorough.",
+      "service": "Aerial Inspection & Documentation",
+      "source": "seed"
+    },
+    {
+      "id": 5,
+      "name": "Robert Martinez",
+      "company": "Northview Property Group",
+      "rating": 5,
+      "date": "2024-10-05",
+      "text": "Northmark's documented procedures and quality control standards give us peace of mind. They're reliable, thorough, and truly professional. We recommend them to all our clients.",
+      "service": "Commercial Property Maintenance",
+      "source": "seed"
+    }
+  ]
+}
