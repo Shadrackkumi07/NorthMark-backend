@@ -122,6 +122,10 @@ app.get('/health', (req, res) => {
   res.json({ ok: true, mailConfigured: hasAllSecrets });
 });
 
+app.get('/ping', (req, res) => {
+  res.json({ ok: true, time: new Date().toISOString() });
+});
+
 app.get('/reviews', async (req, res) => {
   try {
     const reviews = await readReviews();
