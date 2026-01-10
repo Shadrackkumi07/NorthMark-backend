@@ -92,23 +92,55 @@ async function getAccessToken() {
   return data.access_token;
 }
 
-async function sendZohoMail({ name, email, phone, zip }) {
+async function sendZohoMail({ name, email, phone, zip, services }) {
   const accessToken = await getAccessToken();
   const accountId = process.env.ZOHO_ACCOUNT_ID;
   const fromAddress = process.env.ZOHO_FROM_ADDRESS;
   const toAddress = process.env.ZOHO_TO_ADDRESS;
+  const safeServices = Array.isArray(services) ? services.map(sanitize).filter(Boolean) : [];
+  const servicesBlock = safeServices.length
+    ? `<ul>${safeServices.map((service) => `<li>${service}</li>`).join('')}</ul>`
+    : '<p>No services selected.</p>';
+  const submittedAt = new Date().toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  });
 
   const payload = {
     fromAddress,
     toAddress,
     subject: 'New Estimate Request - Northmark Facility Services',
     content: `
-      <div>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Zip Code:</strong> ${zip}</p>
-        <p><strong>Submitted:</strong> ${new Date().toLocaleString()}</p>
+      <div style="font-family: Arial, sans-serif; color: #0f172a;">
+        <h2 style="margin: 0 0 12px;">Estimate Request</h2>
+        <table style="border-collapse: collapse; width: 100%; max-width: 520px;">
+          <tr>
+            <td style="padding: 6px 0; font-weight: 600;">Name</td>
+            <td style="padding: 6px 0;">${name}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; font-weight: 600;">Email</td>
+            <td style="padding: 6px 0;">${email}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; font-weight: 600;">Phone</td>
+            <td style="padding: 6px 0;">${phone}</td>
+          </tr>
+          <tr>
+            <td style="padding: 6px 0; font-weight: 600;">Zip Code</td>
+            <td style="padding: 6px 0;">${zip}</td>
+          </tr>
+        </table>
+        <div style="margin-top: 12px;">
+          <div style="font-weight: 600; margin-bottom: 6px;">Services Requested</div>
+          ${servicesBlock}
+        </div>
+        <div style="margin-top: 12px; font-size: 12px; color: #475569;">
+          Submitted ${submittedAt}
+        </div>
       </div>
     `
   };
@@ -211,9 +243,12 @@ app.delete('/reviews', async (req, res) => {
 });
 
 app.post('/estimate', async (req, res) => {
-  const { firstName, lastName, email, phone, zip } = req.body || {};
+  const { firstName, lastName, email, phone, zip, services } = req.body || {};
+  const cleanServices = Array.isArray(services)
+    ? services.map(sanitize).filter(Boolean)
+    : [];
 
-  if (!firstName || !lastName || !email || !phone || !zip) {
+  if (!firstName || !lastName || !email || !phone || !zip || !cleanServices.length) {
     res.status(400).json({ error: 'Missing required fields.' });
     return;
   }
@@ -233,7 +268,8 @@ app.post('/estimate', async (req, res) => {
       name,
       email: cleanEmail,
       phone: cleanPhone,
-      zip: cleanZip
+      zip: cleanZip,
+      services: cleanServices
     });
     res.json({ ok: true, message: 'Estimate request sent.' });
   } catch (error) {
